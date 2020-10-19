@@ -1,0 +1,44 @@
+.image-grid img {
+	max-height: 200px;
+	max-width: 350px;
+	vertical-align: top;
+}
+.sidepanel {
+	background-color: var(--editor-bg-color);
+	border-left: 1px solid #ddd;
+	position: fixed;
+	width: var(--sidepanel-width);
+	left: 0;
+	top: 0;
+	bottom: 0;
+	overflow-x: hidden;
+}
+.contents {
+	margin-left: var(--sidepanel-width);
+}
+.navbar input.search {
+	width: 30rem;
+}
+.navbar .btn {
+	background-color: var(--editor-bg-color);
+}
+.image-box.active img {
+	background-color: #00a1ff;
+}
+.fa-plus-circle {
+	color: green;
+}
+.fa-minus-circle {
+	color: red;
+}
+.keywords .list-group-item {
+	cursor: pointer;
+}
+.keywords .list-group-item .fas {
+	display: block;
+	right: 0;
+}
+
+.keywords .list-group-item:hover .fas {
+	display: block !important;
+}

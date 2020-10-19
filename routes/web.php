@@ -13,6 +13,8 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+$router->get('/', TaggerController::class);
+$router->get('/metadata', 'MetadataController@index');
+$router->post('/metadata', 'MetadataController@save');
+
+$router->get('/storage/images/thumbnails/{groupUid}/{filename}', 'ImageController@generateThumbnail');
