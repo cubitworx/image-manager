@@ -25,5 +25,8 @@
 		"vue": "^2.6.12",
 		"vue-template-compiler": "^2.6.12",
 		"vue-toasted": "^1.1.28"
+	},
+	"dependencies": {
+		"bootstrap-slider": "^11.0.2"
 	}
 }

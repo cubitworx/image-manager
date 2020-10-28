@@ -1,7 +1,8 @@
 import 'jquery';
 import 'bootstrap';
+import 'bootstrap-slider';
 import Vue from 'vue';
-import * as Toasted from 'vue-toasted';
+import Toasted from 'vue-toasted';
 
 import './bootstrap';
 
@@ -41,6 +42,9 @@ new Vue({
 			keywords: [],
 			new_keyword: '',
 			title: '',
+		},
+		grid: {
+			size: 2,
 		},
 		placeholders: {
 			author: '',
@@ -101,12 +105,19 @@ new Vue({
 			this.updateEditor();
 		},
 		init() {
+			$('#grid-size').slider({
+				tooltip_position: 'bottom',
+				value: this.grid.size,
+			}).on('change', (event) => {
+				this.grid.size = event.value.newValue;
+			});
+
 			axios.get('/metadata')
 				.then((response) => {
 					this.editor.available_keywords = response.data.editor.keywords;
-					this.files = response.data.files.map((item) => {
-						item.__meta__ = { selected: false };
-						return item;
+					this.files = response.data.files.map((file) => {
+						file.__meta__ = { selected: false };
+						return file;
 					});
 				}).catch((err) => {
 					console.error(err);
@@ -141,7 +152,16 @@ new Vue({
 			this.removeImagesArr('keywords', keyword);
 		},
 		save() {
-			axios.post('/metadata', {files: this.files})
+			const files = this.files.map((file) => ({
+				exif: file.exif,
+				filename: file.filename,
+				group_uid: file.group_uid,
+				iptc: file.iptc,
+				uid: file.uid,
+			}));
+console.log(files[1], this.selectedImages);
+
+			axios.post('/metadata', {files})
 				.then(() => {
 					this.$toasted.success('Changes saved', this.toastedOptions());
 				}).catch((err) => {
@@ -152,9 +172,9 @@ new Vue({
 		selectAllImages() {
 			if (this.selectedImages.length) {
 				this.deselectAllImages();
-				this.files.forEach((item) => item.__meta__.selected = false);
+				this.files.forEach((file) => file.__meta__.selected = false);
 			} else {
-				this.filteredFiles.forEach((item) => item.__meta__.selected = true);
+				this.filteredFiles.forEach((file) => file.__meta__.selected = true);
 				this.selectedImages = this.filteredFiles;
 				this.updateEditor();
 			}
@@ -162,15 +182,15 @@ new Vue({
 		selectImage(file, modifier) {
 			switch (modifier) {
 				case 1:
-					let currentIndex = this.filteredFiles.findIndex((item) => item.uid === this.selectedImages[0]?.uid || 0);
-					const endIndex = this.filteredFiles.findIndex((item) => item.uid === file.uid);
+					let currentIndex = this.filteredFiles.findIndex((file) => file.uid === this.selectedImages[0]?.uid || 0);
+					const endIndex = this.filteredFiles.findIndex((file) => file.uid === file.uid);
 					if (currentIndex !== endIndex) {
 						const direction = currentIndex < endIndex;
 						this.deselectAllImages();
 						do {
-							let item = this.filteredFiles[currentIndex];
-							item.__meta__.selected = true;
-							this.selectedImages.push(item);
+							let file = this.filteredFiles[currentIndex];
+							file.__meta__.selected = true;
+							this.selectedImages.push(file);
 						} while (direction ? (currentIndex++ < endIndex) : (currentIndex-- > endIndex));
 					}
 					break;
@@ -203,8 +223,8 @@ new Vue({
 			this.editor[field] = [];
 			if (this.selectedImages.length) {
 				let current = [], tmp;
-				this.editor[field] = this.selectedImages.reduce((result, item) => {
-					current = item.iptc && item.iptc[key] || [];
+				this.editor[field] = this.selectedImages.reduce((result, file) => {
+					current = file.iptc && file.iptc[key] || [];
 					if (result === null)
 						return current;
 					if (!result.length)
@@ -219,8 +239,8 @@ new Vue({
 			this.placeholders[field] = '';
 			if (this.selectedImages.length) {
 				let current = '';
-				this.editor[field] = this.selectedImages.reduce((result, item) => {
-					current = item.iptc && item.iptc[key] || [];
+				this.editor[field] = this.selectedImages.reduce((result, file) => {
+					current = file.iptc && file.iptc[key] || [];
 					if (result === null)
 						return current[0];
 					if (current[0] === result)
@@ -238,10 +258,17 @@ new Vue({
 			}[key];
 
 			if (code)
-				this.selectedImages.forEach((item) => item.iptc[code] = [this.editor[key]]);
+				this.selectedImages.forEach((file) => file.iptc[code] = [this.editor[key]]);
 		},
 	},
 	mounted() {
+    if (localStorage.gridSize)
+      this.grid.size = localStorage.gridSize;
 		this.init();
 	},
+  watch: {
+    'grid.size': (gridSize) => {
+      localStorage.gridSize = gridSize;
+    }
+  },
 });

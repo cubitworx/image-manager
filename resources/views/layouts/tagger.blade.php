@@ -59,9 +59,10 @@
 					<button type="button" v-on:click="selectAllImages" class="btn btn-light mr-sm-1">
 						<i class="fas fa-check-double"></i>
 					</button>
-					<button type="button" v-on:click="save" class="btn btn-light">
+					<button type="button" v-on:click="save" class="btn btn-light mr-sm-3">
 						<i class="fas fa-save"></i>
 					</button>
+					<input type="text" v-model="grid.size" data-slider-min="1" data-slider-max="4" data-slider-step="1" data-slider-ticks="[1, 2, 3, 4]" data-slider-id="grid-size" id="grid-size" />
 				</form>
 				<a href="/" class="navbar-brand ml-auto mr-0">
 					<img src="/images/logo.svg" width="30" height="30" alt="" loading="lazy">
@@ -70,8 +71,8 @@
 		</nav>
 
 		<div class="image-grid p-1">
-			<div v-for="file in filteredFiles" v-on:click="onImageClick($event, file)" :class="{active: selectedImages && isImageSelected(file)}" class="image-box m-1 d-inline-block">
-				<img :src="`/storage/images/thumbnails/${file.group_uid}/${file.filename}`" class="img-thumbnail" />
+			<div v-for="file in filteredFiles" v-on:click="onImageClick($event, file)" :class="['x' + grid.size, {active: selectedImages && isImageSelected(file)}]" class="image-box p-1 d-inline-block">
+				<img :src="`/storage/images/thumbnails/${file.group_uid}/${file.filename}`" class="img-fluid img-thumbnail" />
 			</div>
 		</div>
 

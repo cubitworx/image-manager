@@ -2,14 +2,16 @@
 
 namespace App\Support;
 
+use Intervention\Image\Image;
+
 class Jpeg {
 
 	public function generateThumbnail(string $source, string $target, array $options = []) {
 		$options = $options + [
 			'aspect' => true,
-			'height' => 400,
+			'height' => 600,
 			'quality' => 85,
-			'width' => 400,
+			'width' => 600,
 		];
 
 		$targetHeight = $options['height'];
@@ -32,7 +34,7 @@ class Jpeg {
 		imagejpeg($image, $target, $options['quality']);
 	}
 
-	public function saveMetadata(string $file, array $metadata, array $drivers = []) {
+	public function storeMetadata(string $file, array $metadata, array $drivers = []) {
 		// TODO Not sure how this is going to work with EXIF data since IPTC embed function returns whole file
 		$content = '';
 		foreach ($drivers as $tag => $driver)

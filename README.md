@@ -2,4 +2,4 @@
 Batch IPTC & EXIF metadata manager
 
 ## Run Commands (outside of Lumen)
-`php cmd/<php-filename.php>`
+`php cmd/storage-link.php` - create storage link from public folder
