@@ -48,6 +48,7 @@ new Vue({
 			description: '',
 			keywords: [],
 			new_keyword: '',
+			state: 'untouched',
 			title: '',
 		},
 		grid: {
@@ -66,6 +67,7 @@ new Vue({
 				return this.$toasted.error('Select an image first', this.toastedOptions());
 			this.editor.keywords.push(keyword);
 			this.addImagesArr('keywords', keyword);
+			this.editor.state = 'modified';
 		},
 		addImagesArr(key, item) {
 			const code = {
@@ -86,6 +88,7 @@ new Vue({
 				this.editor.available_keywords.push(this.editor.new_keyword);
 				this.addKeyword(this.editor.new_keyword);
 				this.editor.new_keyword = '';
+				this.editor.state = 'modified';
 			}
 		},
 		deselectAllImages() {
@@ -161,6 +164,7 @@ new Vue({
 		removeKeyword(keyword) {
 			this.editor.keywords.splice(this.editor.keywords.findIndex((item) => item === keyword), 1);
 			this.removeImagesArr('keywords', keyword);
+			this.editor.state = 'modified';
 		},
 		save() {
 			const files = this.files.map((file) => ({
@@ -173,6 +177,7 @@ new Vue({
 
 			axios.post('/metadata', {files})
 				.then(() => {
+					this.editor.state = 'saved';
 					this.$toasted.success('Changes saved', this.toastedOptions());
 				}).catch((err) => {
 					console.error(err);
@@ -269,8 +274,10 @@ new Vue({
 				title: '2#085',
 			}[key];
 
-			if (code)
+			if (code) {
 				this.selectedImages.forEach((file) => file.iptc[code] = [this.editor[key]]);
+				this.editor.state = 'modified';
+			}
 		},
 	},
 	mounted() {

@@ -1,20 +1,28 @@
 .image-grid {
 	.image-box {
 		&.x1 {
-			max-height: 150px;
 			max-width: 200px;
+			img {
+				max-height: 150px;
+			}
 		}
 		&.x2 {
-			max-height: 200px;
 			max-width: 300px;
+			img {
+				max-height: 200px;
+			}
 		}
 		&.x3 {
-			max-height: 350px;
 			max-width: 450px;
+			img {
+				max-height: 350px;
+			}
 		}
 		&.x4 {
-			max-height: 500px;
 			max-width: 600px;
+			img {
+				max-height: 500px;
+			}
 		}
 		&.active img {
 			background-color: #00a1ff;
@@ -22,7 +30,6 @@
 		img {
 			vertical-align: top;
 			width: 100%;
-			height: 100%;
 		}
 	}
 }
@@ -51,6 +58,16 @@
 	}
 	.slider-horizontal {
 		width: 150px;
+	}
+	.btn.btn-save {
+		&.modified {
+			color: #fff;
+			background-color: $danger;
+		}
+		&.saved {
+			color: #fff;
+			background-color: $success;
+		}
 	}
 }
 .fa-plus-circle {

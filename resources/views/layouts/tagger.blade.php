@@ -59,7 +59,7 @@
 					<button type="button" v-on:click="selectAllImages" class="btn btn-light mr-sm-1">
 						<i class="fas fa-check-double"></i>
 					</button>
-					<button type="button" v-on:click="save" class="btn btn-light mr-sm-3">
+					<button type="button" v-on:click="save" :class="editor.state" class="btn btn-light btn-save mr-sm-3">
 						<i class="fas fa-save"></i>
 					</button>
 					<input type="text" v-model="grid.size" data-slider-min="1" data-slider-max="4" data-slider-step="1" data-slider-ticks="[1, 2, 3, 4]" data-slider-id="grid-size" id="grid-size" />

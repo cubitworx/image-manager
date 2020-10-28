@@ -16,7 +16,7 @@ class MetaStore {
 	}
 
 	public function storeLocation(string $location, array $files) {
-		if (file_put_contents("$location/.imagedata", json_encode($files, app()->isProduction() ? 0 : JSON_PRETTY_PRINT)) === false)
+		if (file_put_contents("$location/.imagedata", json_encode($files, app()->environment('production') ? 0 : JSON_PRETTY_PRINT)) === false)
 			throw new Exception('Error saving image metadata');
 	}
 
