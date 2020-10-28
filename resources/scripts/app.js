@@ -14,7 +14,10 @@ new Vue({
 	computed: {
 		availableKeywords() {
 			return this.selectedImages.length
-				? this.editor.available_keywords.filter((value) => !this.editor.keywords.includes(value))
+				? this.editor.available_keywords.filter((keyword) => {
+					const term = this.editor.new_keyword.toLowerCase();
+					return !this.editor.keywords.includes(keyword) && (!term || (keyword.toLowerCase().indexOf(term) !== -1));
+				})
 				: this.editor.available_keywords;
 		},
 		filteredFiles() {
@@ -30,12 +33,6 @@ new Vue({
 								? file.iptc[item].join('|').toLowerCase().indexOf(term) !== -1
 								: false;
 					}, false);
-			});
-		},
-		filteredKeywords() {
-			return this.editor.available_keywords.filter((keyword) => {
-				const term = this.editor.new_keyword.toLowerCase();
-				return !term || (keyword.toLowerCase().indexOf(term) !== -1);
 			});
 		},
 	},
@@ -65,9 +62,13 @@ new Vue({
 		addKeyword(keyword) {
 			if (!this.selectedImages.length)
 				return this.$toasted.error('Select an image first', this.toastedOptions());
-			this.editor.keywords.push(keyword);
-			this.addImagesArr('keywords', keyword);
-			this.editor.state = 'modified';
+			if (!this.editor.keywords.includes(keyword)) {
+				this.editor.keywords.push(keyword);
+				this.addImagesArr('keywords', keyword);
+				this.editor.state = 'modified';
+			} else {
+				this.$toasted.error('Image already contains keyword', this.toastedOptions());
+			}
 		},
 		addImagesArr(key, item) {
 			const code = {
@@ -85,7 +86,8 @@ new Vue({
 		addNewKeyword(event) {
 			event.preventDefault();
 			if (this.editor.new_keyword) {
-				this.editor.available_keywords.push(this.editor.new_keyword);
+				if (!this.editor.available_keywords.includes(this.editor.new_keyword))
+					this.editor.available_keywords.push(this.editor.new_keyword);
 				this.addKeyword(this.editor.new_keyword);
 				this.editor.new_keyword = '';
 				this.editor.state = 'modified';
@@ -157,7 +159,7 @@ new Vue({
 				this.selectedImages.forEach((image) => {
 					image.iptc[code] = image.iptc[code] || [];
 					if (image.iptc[code].includes(item))
-						image.iptc[code].splice(image.iptc[code].findIndex((item) => item === keyword), 1);
+						image.iptc[code].splice(image.iptc[code].findIndex((keyword) => item === keyword), 1);
 				});
 			}
 		},
