@@ -18,10 +18,6 @@ class Meta {
 		}, $files);
 
 		return [
-			'editor' => [
-				// flatmap keywords
-				'keywords' => array_unique(array_merge(...array_values($keywords))),
-			],
 			'files' => array_values($files),
 		];
 	}

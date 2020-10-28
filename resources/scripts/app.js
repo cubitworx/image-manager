@@ -1,7 +1,7 @@
 import 'jquery';
 import 'bootstrap';
 import 'bootstrap-slider';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import Vue from 'vue';
 import Toasted from 'vue-toasted';
 
@@ -30,6 +30,12 @@ new Vue({
 								? file.iptc[item].join('|').toLowerCase().indexOf(term) !== -1
 								: false;
 					}, false);
+			});
+		},
+		filteredKeywords() {
+			return this.editor.available_keywords.filter((keyword) => {
+				const term = this.editor.new_keyword.toLowerCase();
+				return !term || (keyword.toLowerCase().indexOf(term) !== -1);
 			});
 		},
 	},
@@ -115,7 +121,6 @@ new Vue({
 
 			axios.get('/metadata')
 				.then((response) => {
-					this.editor.available_keywords = response.data.editor.keywords;
 					this.files = response.data.files.map((file) => {
 						Object.assign(file, {
 							__meta__: { selected: false },
@@ -124,6 +129,7 @@ new Vue({
 						});
 						return file;
 					});
+					this.editor.available_keywords = uniq(response.data.files.flatMap((file) => file.iptc['2#025'] || []));
 				}).catch((err) => {
 					console.error(err);
 					this.$toasted.error('Error reading files', this.toastedOptions());
@@ -186,7 +192,6 @@ new Vue({
 		selectImage(file, modifier) {
 			switch (modifier) {
 				case 1:
-console.log(this.selectedImages.length);
 					if (this.selectedImages.length) {
 						let currentIndex = this.filteredFiles.findIndex((item) => item.uid === this.selectedImages[0].uid || 0);
 						const endIndex = this.filteredFiles.findIndex((item) => item.uid === file.uid);

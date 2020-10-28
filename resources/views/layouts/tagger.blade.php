@@ -36,7 +36,7 @@
 					</div>
 				</form>
 				<ul class="list-group">
-					<li v-for="keyword in availableKeywords" v-on:click="addKeyword(keyword)" class="list-group-item d-flex justify-content-between align-items-center p-2">
+					<li v-for="keyword in filteredKeywords" v-on:click="addKeyword(keyword)" class="list-group-item d-flex justify-content-between align-items-center p-2">
 						@{{ keyword }}
 						<i class="fas fa-plus-circle d-none"></i>
 					</li>
