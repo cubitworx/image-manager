@@ -1,6 +1,7 @@
 import 'jquery';
 import 'bootstrap';
 import 'bootstrap-slider';
+import { isEmpty } from 'lodash';
 import Vue from 'vue';
 import Toasted from 'vue-toasted';
 
@@ -116,7 +117,11 @@ new Vue({
 				.then((response) => {
 					this.editor.available_keywords = response.data.editor.keywords;
 					this.files = response.data.files.map((file) => {
-						file.__meta__ = { selected: false };
+						Object.assign(file, {
+							__meta__: { selected: false },
+							exif: !isEmpty(file.exif) ? file.exif : {},
+							iptc: !isEmpty(file.iptc) ? file.iptc : {},
+						});
 						return file;
 					});
 				}).catch((err) => {
@@ -159,7 +164,6 @@ new Vue({
 				iptc: file.iptc,
 				uid: file.uid,
 			}));
-console.log(files[1], this.selectedImages);
 
 			axios.post('/metadata', {files})
 				.then(() => {
@@ -182,16 +186,19 @@ console.log(files[1], this.selectedImages);
 		selectImage(file, modifier) {
 			switch (modifier) {
 				case 1:
-					let currentIndex = this.filteredFiles.findIndex((file) => file.uid === this.selectedImages[0]?.uid || 0);
-					const endIndex = this.filteredFiles.findIndex((file) => file.uid === file.uid);
-					if (currentIndex !== endIndex) {
-						const direction = currentIndex < endIndex;
-						this.deselectAllImages();
-						do {
-							let file = this.filteredFiles[currentIndex];
-							file.__meta__.selected = true;
-							this.selectedImages.push(file);
-						} while (direction ? (currentIndex++ < endIndex) : (currentIndex-- > endIndex));
+console.log(this.selectedImages.length);
+					if (this.selectedImages.length) {
+						let currentIndex = this.filteredFiles.findIndex((item) => item.uid === this.selectedImages[0].uid || 0);
+						const endIndex = this.filteredFiles.findIndex((item) => item.uid === file.uid);
+						if (currentIndex !== endIndex) {
+							const direction = currentIndex < endIndex;
+							this.deselectAllImages();
+							do {
+								let filteredFile = this.filteredFiles[currentIndex];
+								filteredFile.__meta__.selected = true;
+								this.selectedImages.push(filteredFile);
+							} while (direction ? (currentIndex++ < endIndex) : (currentIndex-- > endIndex));
+						}
 					}
 					break;
 				case 2:

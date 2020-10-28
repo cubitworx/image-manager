@@ -14,7 +14,6 @@ class MetadataController extends Controller {
 	}
 
 	public function store(Request $request) {
-dd($request->json('files'));
 		(new Meta())->storeLocation($this->_location, $request->json('files'));
 
 		response()->json('Success');
