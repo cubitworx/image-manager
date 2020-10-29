@@ -62,7 +62,7 @@
 					<button type="button" v-on:click="save" :class="editor.state" class="btn btn-light btn-save mr-sm-3">
 						<i class="fas fa-save"></i>
 					</button>
-					<input type="text" v-model="grid.size" data-slider-min="1" data-slider-max="4" data-slider-step="1" data-slider-ticks="[1, 2, 3, 4]" data-slider-id="grid-size" id="grid-size" />
+					<input type="text" v-model="grid.size" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-ticks="[1, 2, 3, 4, 5]" data-slider-id="grid-size" id="grid-size" />
 				</form>
 				<a href="/" class="navbar-brand ml-auto mr-0">
 					<img src="/images/logo.svg" width="30" height="30" alt="" loading="lazy">
