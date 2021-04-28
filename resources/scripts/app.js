@@ -7,10 +7,15 @@ import Toasted from 'vue-toasted';
 
 import './bootstrap';
 
+import FolderSelectModal from './components/folder-select-modal.component';
+
 Vue.use(Toasted);
 
 new Vue({
 	el: '#app',
+	components: {
+		FolderSelectModal,
+	},
 	computed: {
 		availableKeywords() {
 			return this.selectedImages.length
@@ -56,7 +61,9 @@ new Vue({
 			description: '',
 			title: '',
 		},
+		selectedFolder: '',
 		selectedImages: [],
+		showFolderSelectModal: false,
 	},
 	methods: {
 		addKeyword(keyword) {
@@ -225,6 +232,11 @@ new Vue({
 					break;
 			}
 			this.updateEditor();
+		},
+		toggleFolderSelectModal(show = null) {
+			this.showFolderSelectModal = (show === null) ? (this.showFolderSelectModal = !this.showFolderSelectModal) : show;
+			console.log(show, this.showFolderSelectModal);
+			$('#folder-select-modal').modal(this.showFolderSelectModal ? 'show' : 'hide');
 		},
 		toastedOptions() {
 			return {

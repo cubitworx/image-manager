@@ -54,17 +54,18 @@
 			</button>
 
 			<div class="collapse navbar-collapse" id="navbarMain">
-				<form class="form-inline my-2 my-lg-0">
-					<input type="search" v-model.trim="filter" class="search form-control mr-sm-1" placeholder="Search" aria-label="Search">
-					<button type="button" v-on:click="selectAllImages" class="btn btn-light mr-sm-1">
-						<i class="fas fa-check-double"></i>
-					</button>
-					<button type="button" v-on:click="save" :class="editor.state" class="btn btn-light btn-save mr-sm-3">
-						<i class="fas fa-save"></i>
-					</button>
-					<input type="text" v-model="grid.size" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-ticks="[1, 2, 3, 4, 5]" data-slider-id="grid-size" id="grid-size" />
-				</form>
-				<a href="/" class="navbar-brand ml-auto mr-0">
+				<input type="search" v-model.trim="filter" class="search form-control mr-1" placeholder="Search" aria-label="Search">
+				<button type="button" v-on:click="selectAllImages" class="btn btn-light mr-1">
+					<i class="fas fa-check-double"></i>
+				</button>
+				<button type="button" v-on:click="save" :class="editor.state" class="btn btn-light btn-save mr-3">
+					<i class="fas fa-save"></i>
+				</button>
+				<input type="text" v-model="grid.size" data-slider-min="1" data-slider-max="5" data-slider-step="1" data-slider-ticks="[1, 2, 3, 4, 5]" data-slider-id="grid-size" id="grid-size" />
+				<button type="button" v-on:click="toggleFolderSelectModal(true)" class="btn btn-light ml-auto">
+					<i class="fas fa-cog"></i>
+				</button>
+				<a href="/" class="navbar-brand ml-3 mr-0">
 					<img src="/images/logo.svg" width="30" height="30" alt="" loading="lazy">
 				</a>
 			</div>
@@ -80,3 +81,7 @@
 	</div>
 
 @endsection
+
+@push('after-scripts')
+	<folder-select-modal v-if="showFolderSelectModal" selectedFolder="selectedFolder" @close="toggleFolderSelectModal(false)" />
+@endpush

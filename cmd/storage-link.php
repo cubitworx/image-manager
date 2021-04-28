@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Console\Commands;
-
 $links = [
 	'public/storage' => 'storage/app/public',
 ];
